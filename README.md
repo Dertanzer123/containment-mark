@@ -28,7 +28,8 @@
 - [Technologies Used](#-technologies-used)
 - [Architecture](#-architecture)
 - [Use Cases](#-use-cases)
-    - [Use Case Diagram](#use-case-diagram)
+- [OOP Diagrams](#-oop-diagrams)
+- [Project Reports](#-project-reports)
 - [License](#-license)
 
 ---
@@ -91,9 +92,26 @@ manual systems to structured, secure digital processes.
 | Register Visitor       | Clerk     | Log visitors and schedule visits.                       |
 | Update Cell Allocation | Clerk     | Reassign prisoners to different cells.                  |
 
-### Use Case Diagram
+---
 
-![Use Case Diagram](./diagrams/use-case-diagram.png)
+## 📊 OOP Diagrams
+
+All the diagrams can be found in the `diagrams` folder.
+
+- [**Use Case Diagram**](./diagrams/Use%20Case%20Diagram.png)
+- [**Class Diagram**](./diagrams/Class%20Diagram.png)
+- [**Sequence Diagram**](./diagrams/Sequence%20Diagram.png)
+- [**State Chart Diagram**](./diagrams/State%20Chart%20Diagram.png)
+- [**Activity Diagram**](./diagrams/Activity%20Diagram.png)
+
+---
+
+## 📄 Project Reports
+
+The project reports can be found in the `reports` folder.
+
+- [**Analysis and Requirements Definition**](./reports/Analysis%20and%20Requirements%20Definition.pdf)
+- [**System Design**](./reports/System%20Design.pdf)
 
 ---
 
