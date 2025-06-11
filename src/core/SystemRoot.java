@@ -1,6 +1,6 @@
 package core;
 
-import managers.PrisonerBaseManager;
+import managers.PrisonerManager;
 import managers.ReportManager;
 import managers.SectionManager;
 import managers.StaffManager;
@@ -10,13 +10,13 @@ import managers.StaffManager;
 public class SystemRoot {
     private final ReportManager reportManager;
     private final SectionManager sectionManager;
-    private final PrisonerBaseManager prisonerManager;
+    private final PrisonerManager prisonerManager;
     private final StaffManager staffManager;
 
     public SystemRoot() {
         this.reportManager = new ReportManager(this);
         this.sectionManager = new SectionManager(this);
-        this.prisonerManager = new PrisonerBaseManager(this);
+        this.prisonerManager = new PrisonerManager(this);
         this.staffManager = new StaffManager(this);
     }
 }

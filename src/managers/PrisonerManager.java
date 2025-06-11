@@ -2,8 +2,8 @@ package managers;
 
 import core.SystemRoot;
 
-public class PrisonerBaseManager extends BaseManager {
-    public PrisonerBaseManager(SystemRoot root) {
+public class PrisonerManager extends BaseManager {
+    public PrisonerManager(SystemRoot root) {
         super("PrisonerBaseManager", root);
     }
 
