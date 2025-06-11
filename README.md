@@ -1,5 +1,11 @@
 # Prison Management System
 
+![Java](https://img.shields.io/badge/language-Java-blue?logo=java)
+![License](https://img.shields.io/github/license/Dertanzer123/containment-mark)
+![Commits](https://img.shields.io/github/commit-activity/t/Dertanzer123/containment-mark)
+![Last Commit](https://img.shields.io/github/last-commit/Dertanzer123/containment-mark)
+![Team](https://img.shields.io/badge/team-Dertanzer123%20%7C%20TcePrepK%20%7C%20Alaattin-yellow)
+
 ### Dokuz Eylül University – Department of Computer Engineering
 
 #### Course Project – Object-Oriented Programming
