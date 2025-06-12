@@ -44,7 +44,7 @@ public class PrisonerManager extends BaseManager {
                 break;
             case "addVisit":
                 Visit v = (Visit)signal.signaldata;
-                if(addVisit(v.getVisited(), v.getName(), v.getDate(), v.getReason()))
+                if(addVisit(v.visited(), v.name(), v.date(), v.reason()))
                 {
                     signalBuffer = new Signal("visitAdded", null);
                 }
@@ -125,9 +125,9 @@ public class PrisonerManager extends BaseManager {
     }
     private void deleteVisit(Visit v)
     {
-        if(prisoners.contains(v.getVisited()))
+        if(prisoners.contains(v.visited()))
         {
-            v.getVisited().removeVisit(v);
+            v.visited().removeVisit(v);
 
         }
         else
@@ -144,7 +144,7 @@ public class PrisonerManager extends BaseManager {
 
         for(Visit v:visits)//TODO: add create report signal to updatevisits
         {
-            if(v.getDate().before(currentDate))
+            if(v.date().before(currentDate))
             {
                 deleteVisit(v);
             }

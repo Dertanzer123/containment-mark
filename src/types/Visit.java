@@ -2,46 +2,12 @@ package types;
 
 import java.util.Date;
 
-public class Visit {
-    private final Prisoner visited;
-    private final String name;
-    private final Date date;
-    private final String reason;
-    public Visit(Prisoner visited, String name, Date date, String reason)
-    {
-
-        this.visited = visited;
-        this.name = name;
-        this.date = date;
-        this.reason = reason;
-    }
+public record Visit(Prisoner visited, String name, Date date, String reason) {
     @Override
-    public boolean equals(Object o)
-    {
-        if(o instanceof Visit)
-        {
-            Visit v = (Visit)o;
-            return v.visited.equals(visited) && v.name.equals(name) && v.date.equals(date) && v.reason.equals(reason);
+    public boolean equals(Object o) {
+        if (o instanceof Visit(Prisoner visited1, String name1, Date date1, String reason1)) {
+            return visited1.equals(visited) && name1.equals(name) && date1.equals(date) && reason1.equals(reason);
         }
         return false;
     }
-    public Prisoner getVisited()
-    {
-        return visited;
-    }
-    public String getName()
-    {
-        return name;
-    }
-    public Date getDate()
-    {
-        return date;
-    }
-    public String getReason()
-    {
-        return reason;
-    }
-
-
-
 }
