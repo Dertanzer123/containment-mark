@@ -12,17 +12,18 @@ public class PrisonerManager extends BaseManager {
     ArrayList<Visit> visits = new ArrayList<>();
 
     public PrisonerManager(SystemRoot root) {
-        super(SignalLocation.PrisonerManager, root);
+        super(root);
     }
 
     @Override
-    public void emitSignal(SignalLocation signalDestination) {
-        root.bridgeSignals(id, signalDestination);
+    public void emitSignal(BaseManager signalDestination) {
+        root.bridgeSignals(this, signalDestination);
     }
 
     @Override
-    public void absorbSignal(Signal signal, SignalLocation signalOrigin) {
-        switch (signal.signalCode) {//todo fill the switch cases
+    public void absorbSignal(Signal signal, BaseManager signalOrigin) {
+        // TODO: fill the switch cases
+        switch (signal.signalCode) {
             case ReportAdded:
                 // This is a feedback signal from the report manager, no need to do anything
                 break;
@@ -123,13 +124,12 @@ public class PrisonerManager extends BaseManager {
      * @param currentDate the current date
      */
     private void updateVisits(Date currentDate) {
-        for (Visit v : visits) {
+        for (Visit visit : visits) {
             // TODO: add create report signal to updateVisits
-            if (v.date().before(currentDate)) {
-                deleteVisit(v);
+            if (visit.date().before(currentDate)) {
+                deleteVisit(visit);
             }
         }
-
     }
 
     /**

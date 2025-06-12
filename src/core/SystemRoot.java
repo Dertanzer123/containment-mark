@@ -2,7 +2,6 @@ package core;
 
 import managers.*;
 import types.Signal;
-import types.SignalLocation;
 
 /// SystemRoot bridges the managers.
 /// For example, one manager emits a signal with a destination root sends this signal to destination manager the destination manager absorbs and do what it need to do
@@ -27,33 +26,13 @@ public class SystemRoot {
      * @param signalOrigin      the origin of the signal
      * @param signalDestination the destination of the signal
      */
-    public void bridgeSignals(SignalLocation signalOrigin, SignalLocation signalDestination) {
+    public void bridgeSignals(BaseManager signalOrigin, BaseManager signalDestination) {
         if (signalOrigin.equals(signalDestination)) {
             return;
         }
 
         // Get the signal buffer from the origin manager
-        Signal signalBuffer = null;
-        switch (signalOrigin) {
-            case ReportManager:
-                signalBuffer = reportManager.getSignalBuffer();
-                break;
-            case SectionManager:
-                signalBuffer = sectionManager.getSignalBuffer();
-                break;
-            case PrisonerManager:
-                signalBuffer = prisonerManager.getSignalBuffer();
-                break;
-            case StaffManager:
-                signalBuffer = staffManager.getSignalBuffer();
-                break;
-            case UIManager:
-                signalBuffer = uiManager.getSignalBuffer();
-                break;
-            default:
-                System.err.println("Invalid signal origin");
-                System.exit(1);
-        }
+        Signal signalBuffer = signalOrigin.getSignalBuffer();
 
         // If the received signal code is null, then the signal buffer is invalid
         if (signalBuffer.signalCode == null) {
@@ -62,22 +41,6 @@ public class SystemRoot {
         }
 
         // Now send the signal to the destination manager
-        switch (signalDestination) {
-            case ReportManager:
-                reportManager.absorbSignal(signalBuffer, signalOrigin);
-                break;
-            case SectionManager:
-                sectionManager.absorbSignal(signalBuffer, signalOrigin);
-                break;
-            case PrisonerManager:
-                prisonerManager.absorbSignal(signalBuffer, signalOrigin);
-                break;
-            case StaffManager:
-                staffManager.absorbSignal(signalBuffer, signalOrigin);
-                break;
-            case UIManager:
-                uiManager.absorbSignal(signalBuffer, signalOrigin);
-                break;
-        }
+        signalDestination.absorbSignal(signalBuffer, signalOrigin);
     }
 }

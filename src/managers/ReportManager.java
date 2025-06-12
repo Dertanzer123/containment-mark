@@ -4,25 +4,24 @@ import core.SystemRoot;
 import types.Report;
 import types.Signal;
 import types.SignalCode;
-import types.SignalLocation;
 
 import java.util.ArrayList;
 
 public class ReportManager extends BaseManager {
-    public ReportManager(SystemRoot root) {
-        super(SignalLocation.ReportManager, root);
-    }
-
     ArrayList<Report> Reports = new ArrayList<>();
     // TODO: Add a database or file portal to store reports
 
-    @Override
-    public void emitSignal(SignalLocation signalDestination) {
-        root.bridgeSignals(id, signalDestination);
+    public ReportManager(SystemRoot root) {
+        super(root);
     }
 
     @Override
-    public void absorbSignal(Signal signal, SignalLocation signalOrigin) {
+    public void emitSignal(BaseManager signalDestination) {
+        root.bridgeSignals(this, signalDestination);
+    }
+
+    @Override
+    public void absorbSignal(Signal signal, BaseManager signalOrigin) {
         switch (signal.signalCode) {
             case AddReport:
                 Report r = new Report((Report) signal.signalData);
@@ -36,7 +35,6 @@ public class ReportManager extends BaseManager {
                 signalBuffer = new Signal(SignalCode.ReportReturn, r1);
                 emitSignal(signalOrigin);
                 break;
-
         }
     }
 
