@@ -24,26 +24,36 @@ public class PrisonerManager extends BaseManager {
     public void absorbSignal(Signal signal, BaseManager signalOrigin) {
         // TODO: fill the switch cases
         switch (signal.signalCode) {
-            case ReportAdded:
+            case ReportAdded: {
                 // This is a feedback signal from the report manager, no need to do anything
                 break;
-            case UpdateDate:
+            }
+            case UpdateDate: {
                 // This is a signal for updating time of the manager. Time is updated daily
                 updateVisits(new Date());
                 break;
-            case AddVisit:
-                Visit v = (Visit) signal.signalData;
-                if (addVisit(v.visitedPrisoner(), v.name(), v.date(), v.reason())) {
+            }
+            case AddVisit: {
+                Visit visit = (Visit) signal.signalData;
+                if (addVisit(visit.visitedPrisoner(), visit.name(), visit.date(), visit.reason())) {
                     signalBuffer = new Signal(SignalCode.VisitAdded, null);
                 } else {
                     signalBuffer = new Signal(SignalCode.Error, "Prisoner not found");
                 }
                 emitSignal(signalOrigin);
-
                 break;
-            case DeleteVisit:
+            }
+            case DeleteVisit: {
+                Visit visit = (Visit) signal.signalData;
+                if (deleteVisit(visit)) {
+                    signalBuffer = new Signal(SignalCode.VisitDeleted, null);
+                } else {
+                    signalBuffer = new Signal(SignalCode.Error, "Visit not found");
+                }
+                emitSignal(signalOrigin);
                 break;
-            case AddPrisoner:
+            }
+            case AddPrisoner: {
                 String id = (String) signal.signalData;
                 if (addPrisoner(id)) {
                     signalBuffer = new Signal(SignalCode.PrisonerAdded, null);
@@ -53,7 +63,8 @@ public class PrisonerManager extends BaseManager {
                 emitSignal(signalOrigin);
 
                 break;
-            case UpdatePrisonerData:
+            }
+            case UpdatePrisonerData: {
                 Prisoner p = (Prisoner) signal.signalData;
                 if (updatePrisonerData(p.getId(), p.getHomeSection())) {
                     signalBuffer = new Signal(SignalCode.PrisonerUpdated, null);
@@ -63,7 +74,8 @@ public class PrisonerManager extends BaseManager {
                 emitSignal(signalOrigin);
 
                 break;
-            case DeletePrisoner:
+            }
+            case DeletePrisoner: {
                 if (deletePrisoner((String) signal.signalData)) {
                     signalBuffer = new Signal(SignalCode.PrisonerDeleted, null);
                 } else {
@@ -71,6 +83,7 @@ public class PrisonerManager extends BaseManager {
                 }
                 emitSignal(signalOrigin);
                 break;
+            }
         }
     }
 

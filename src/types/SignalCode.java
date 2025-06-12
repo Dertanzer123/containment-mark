@@ -14,6 +14,7 @@ public enum SignalCode {
     AddVisit,
     DeleteVisit,
     VisitAdded,
+    VisitDeleted,
 
     // Prisoner codes
     AddPrisoner,
