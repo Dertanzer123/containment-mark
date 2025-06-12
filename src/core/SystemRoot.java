@@ -1,6 +1,7 @@
 package core;
 
 import managers.*;
+import types.Signal;
 
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ public class SystemRoot {
 
     }
     public void bridgeSignals(String signalOrigin, String signalDestination) {//this takes signal from origin and sends it to destination
-        String signalBuffer = "";
+        Signal signalBuffer = null;//todo: this kind of signal transmitting can get stack overflow error improve it by returns
         if (Objects.equals(signalOrigin, signalDestination)) {
             return;
         }
@@ -43,9 +44,10 @@ public class SystemRoot {
             signalBuffer = uiManager.getSignalBuffer();
                 break;
         }
-        if(signalBuffer == null){
-            return;
+        if(signalBuffer == null || signalBuffer.signalcode == null){
+            return;//todo: add error handling
         }
+
         switch (signalDestination) {
             case "ReportManager":
                 reportManager.absorbSignal(signalBuffer,signalOrigin);

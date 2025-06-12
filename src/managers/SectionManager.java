@@ -1,11 +1,19 @@
 package managers;
 
 import core.SystemRoot;
+import types.Section;
+import types.Signal;
 
 public class SectionManager extends BaseManager {
     public SectionManager(SystemRoot root) {
         super("SectionManager", root);
     }
+
+    Section RootSection;
+
+    //todo: add a database or file portal to store sections tree;
+    //todo: add methods to add section tree;
+
 
     @Override
     public void emitSignal(String signalDestination) {
@@ -13,11 +21,11 @@ public class SectionManager extends BaseManager {
 
         root.bridgeSignals(id, signalDestination);
 
-        // TODO: emit signal
+
     }
 
     @Override
-    public void absorbSignal(String signal, String signalOrigin) {
+    public void absorbSignal(Signal signal, String signalOrigin) {
         // TODO: absorb signal
     }
 
@@ -26,8 +34,8 @@ public class SectionManager extends BaseManager {
 
 
     @Override
-    public String getSignalBuffer() {
+    public Signal getSignalBuffer() {
         return signalBuffer;
-        // TODO: absorb signal
+
     }
 }

@@ -1,11 +1,20 @@
 package managers;
 
 import core.SystemRoot;
+import types.Signal;
+import types.Staff;
+
+import java.util.ArrayList;
 
 public class StaffManager extends BaseManager {
     public StaffManager(SystemRoot root) {
         super("StaffManager", root);
     }
+
+    //todo: add a database or file portal to store staff
+
+    ArrayList<Staff> staffs = new ArrayList<Staff>();
+
 
     @Override
     public void emitSignal(String signalDestination) {
@@ -13,11 +22,11 @@ public class StaffManager extends BaseManager {
 
         root.bridgeSignals(id, signalDestination);
 
-        // TODO: emit signal
+
     }
 
     @Override
-    public void absorbSignal(String signal, String signalOrigin) {
+    public void absorbSignal(Signal signal, String signalOrigin) {
         // TODO: absorb signal
     }
 
@@ -26,8 +35,8 @@ public class StaffManager extends BaseManager {
 
 
     @Override
-    public String getSignalBuffer() {
+    public Signal getSignalBuffer() {
         return signalBuffer;
-        // TODO: absorb signal
+
     }
 }

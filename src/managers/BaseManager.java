@@ -1,9 +1,10 @@
 package managers;
 
 import core.SystemRoot;
+import types.Signal;
 
 public abstract class BaseManager {
-    String signalBuffer;
+    Signal signalBuffer;
     String id;
     SystemRoot root;
 
@@ -19,8 +20,8 @@ public abstract class BaseManager {
     /**
      * Absorbs a signal from the root
      */
-    public abstract void absorbSignal( String signal,String signalOrigin);
+    public abstract void absorbSignal(Signal signal, String signalOrigin);
 
-    public abstract String getSignalBuffer();
+    public abstract Signal getSignalBuffer();
 
 }
