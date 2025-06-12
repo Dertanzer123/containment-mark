@@ -2,32 +2,28 @@ package managers;
 
 import core.SystemRoot;
 import types.Signal;
+import types.SignalCode;
+import types.SignalLocation;
 
 public class UIManager extends BaseManager {
     public UIManager(SystemRoot root) {
-        super( "UIManager", root);
+        super(SignalLocation.UIManager, root);
     }
 
-    //Todo: add methods to interact with system the only entry point to system is from this manager
-    //todo: add ui methods to modify signal buffer and send signals to other managers
+    // TODO: Add methods to interact with system the only entry point to system is from this manager
+    // TODO: Add ui methods to modify signal buffer and send signals to other managers
     @Override
-    public void emitSignal(String signalDestination) {
+    public void emitSignal(SignalLocation signalDestination) {
         root.bridgeSignals(id, signalDestination);
     }
 
     @Override
-    public void absorbSignal(Signal signal, String signalOrigin) {
-        //todo: absorb signal
-        switch (signal.signalcode)
-        {
-            case "error":
-                System.out.println(signal.signaldata);//show error message on uı
+    public void absorbSignal(Signal signal, SignalLocation signalOrigin) {
+        // TODO: Absorb signal
+        switch (signal.signalCode) {
+            case SignalCode.Error:
+                System.out.println(signal.signalData);//show error message on uı
                 break;
         }
-    }
-
-    @Override
-    public Signal getSignalBuffer() {
-        return signalBuffer;
     }
 }

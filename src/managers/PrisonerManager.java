@@ -1,207 +1,184 @@
 package managers;
 
 import core.SystemRoot;
-import types.Prisoner;
-import types.Section;
-import types.Signal;
-import types.Visit;
+import types.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class PrisonerManager extends BaseManager {
-
-    ArrayList<Prisoner> prisoners = new ArrayList<>();
+    HashMap<String, Prisoner> prisoners = new HashMap<>();
     ArrayList<Visit> visits = new ArrayList<>();
 
-
-
-
-
-
     public PrisonerManager(SystemRoot root) {
-        super("PrisonerBaseManager", root);
+        super(SignalLocation.PrisonerManager, root);
     }
 
     @Override
-    public void emitSignal(String signalDestination) {
-
-
-           root.bridgeSignals(id, signalDestination);
-
-
+    public void emitSignal(SignalLocation signalDestination) {
+        root.bridgeSignals(id, signalDestination);
     }
 
     @Override
-    public void absorbSignal(Signal signal, String signalOrigin) {
-
-        switch (signal.signalcode)
-        {//todo fill the switch cases
-            case "reportAdded"://this is a feedback signal from report manager
+    public void absorbSignal(Signal signal, SignalLocation signalOrigin) {
+        switch (signal.signalCode) {//todo fill the switch cases
+            case ReportAdded:
+                // This is a feedback signal from the report manager, no need to do anything
                 break;
-            case "updateDate"://this is a signal for updateing time of the manager time is updated daily
+            case UpdateDate:
+                // This is a signal for updating time of the manager. Time is updated daily
                 updateVisits(new Date());
                 break;
-            case "addVisit":
-                Visit v = (Visit)signal.signaldata;
-                if(addVisit(v.visited(), v.name(), v.date(), v.reason()))
-                {
-                    signalBuffer = new Signal("visitAdded", null);
-                }
-                else
-                {
-                    signalBuffer = new Signal("error", "prisoner not found");
+            case AddVisit:
+                Visit v = (Visit) signal.signalData;
+                if (addVisit(v.visitedPrisoner(), v.name(), v.date(), v.reason())) {
+                    signalBuffer = new Signal(SignalCode.VisitAdded, null);
+                } else {
+                    signalBuffer = new Signal(SignalCode.Error, "Prisoner not found");
                 }
                 emitSignal(signalOrigin);
 
                 break;
-            case "deleteVisit":
+            case DeleteVisit:
                 break;
-            case "addPrisoner":
-                String id = (String)signal.signaldata;
-                if(AddPrisoner(id))
-                {
-                    signalBuffer = new Signal("prisonerAdded", null);
-                }
-                else
-                {
-                    signalBuffer = new Signal("error", "prisoner already exists with same id");
+            case AddPrisoner:
+                String id = (String) signal.signalData;
+                if (addPrisoner(id)) {
+                    signalBuffer = new Signal(SignalCode.PrisonerAdded, null);
+                } else {
+                    signalBuffer = new Signal(SignalCode.Error, "Prisoner already exists with same id");
                 }
                 emitSignal(signalOrigin);
 
                 break;
-            case "updatePrisonerData":
-                Prisoner p = (Prisoner)signal.signaldata;
-                if(updatePrisonerData(p.getId(), p.getHomeSection()))
-                {
-                    signalBuffer = new Signal("prisonerUpdated", null);
-                }
-                else
-                {
-                    signalBuffer = new Signal("error", "prisoner already exists with same id");
+            case UpdatePrisonerData:
+                Prisoner p = (Prisoner) signal.signalData;
+                if (updatePrisonerData(p.getId(), p.getHomeSection())) {
+                    signalBuffer = new Signal(SignalCode.PrisonerUpdated, null);
+                } else {
+                    signalBuffer = new Signal(SignalCode.Error, "Prisoner already exists with same id");
                 }
                 emitSignal(signalOrigin);
 
                 break;
-            case "deletePrisoner":
-                if(deletePrisoner((String)signal.signaldata))
-                {
-                    signalBuffer = new Signal("prisonerDeleted", null);
-                }
-                else
-                {
-                    signalBuffer = new Signal("error", "prisoner not found");
+            case DeletePrisoner:
+                if (deletePrisoner((String) signal.signalData)) {
+                    signalBuffer = new Signal(SignalCode.PrisonerDeleted, null);
+                } else {
+                    signalBuffer = new Signal(SignalCode.Error, "Prisoner not found");
                 }
                 emitSignal(signalOrigin);
                 break;
-
         }
-
-
-
-
-
-
     }
 
-    @Override
-    public Signal getSignalBuffer() {
-        return signalBuffer;
-
-    }
-
-    private boolean addVisit(Prisoner p, String name, Date date, String reason)
-    {
-        if(!prisoners.contains(p))
-        {
-           // System.out.println("prisoner not found");//todo: add error handling
+    /**
+     * Adds a visit to a prisoner
+     *
+     * @param prisoner the prisoner that is being visited
+     * @param name     the name of the visitor
+     * @param date     the date of the visit
+     * @param reason   the reason for the visit
+     * @return true if the visit was added, false otherwise
+     */
+    private boolean addVisit(Prisoner prisoner, String name, Date date, String reason) {
+        String id = prisoner.getId();
+        if (!prisoners.containsKey(id)) {
+            System.err.println("The prisoner with id " + id + " was not found");
             return false;
         }
-        Visit v = new Visit(p, name, date, reason);
-        visits.add(v);
-        p.addVisit(v);
+
+        Visit visit = new Visit(prisoner, name, date, reason);
+        visits.add(visit);
+        prisoner.addVisit(visit);
+
         return true;
-
     }
-    private void deleteVisit(Visit v)
-    {
-        if(prisoners.contains(v.visited()))
-        {
-            v.visited().removeVisit(v);
 
+    /**
+     * Deletes a visit from a prisoner
+     *
+     * @param visit the visit to delete
+     * @return true if the visit was deleted, false otherwise
+     */
+    private boolean deleteVisit(Visit visit) {
+        Prisoner prisoner = visit.visitedPrisoner();
+        String id = prisoner.getId();
+
+        if (!prisoners.containsKey(id)) {
+            System.err.println("The prisoner with id " + id + " was not found");
+            return false;
         }
-        else
-        {
-            System.out.println("prisoner not found");//todo: add error handling
-        }
-        visits.remove(v);
 
+        prisoner.removeVisit(visit);
+        visits.remove(visit);
 
+        return true;
     }
-    private void updateVisits(Date currentDate)
-    {
 
-
-        for(Visit v:visits)//TODO: add create report signal to updatevisits
-        {
-            if(v.date().before(currentDate))
-            {
+    /**
+     * Updates the visits of the system
+     *
+     * @param currentDate the current date
+     */
+    private void updateVisits(Date currentDate) {
+        for (Visit v : visits) {
+            // TODO: add create report signal to updateVisits
+            if (v.date().before(currentDate)) {
                 deleteVisit(v);
             }
         }
 
     }
 
-//    private boolean AddPrisoner(String id, Section homeSection)
-//    {
-//        Prisoner p = new Prisoner(id, homeSection);
-//        if(prisoners.contains(p))
-//        {
-//            //System.out.println("prisoner already exists with same id");//todo: add error handling
-//            return false;
-//        }
-//        prisoners.add(p);
-//        return true;
-//    }
-    private boolean AddPrisoner(String id)
-    {
-
-        if(prisoners.contains(new Prisoner(id, null)))
-        {
-
+    /**
+     * Adds a new prisoner to the system
+     *
+     * @param id the id of the prisoner
+     * @return true if the prisoner was added, false otherwise
+     */
+    private boolean addPrisoner(String id) {
+        if (prisoners.containsKey(id)) {
             return false;
         }
-        Section homeSection = null;//todo: add find empty section signal to here
-        prisoners.add(new Prisoner(id, homeSection));
-        return true;
-    }
-    private boolean updatePrisonerData(String idkey,Section homeSection)
-    {
-        if(!prisoners.contains(new Prisoner(idkey, homeSection)))
-        {
-            ;//todo: add error handling
-            return false;
-        }
-        prisoners.get(prisoners.indexOf(new Prisoner(idkey, homeSection))).setHomeSection(homeSection);
 
-        return true;
-
-    }
-    private boolean deletePrisoner(String idkey)
-    {
-        if(!prisoners.contains(new Prisoner(idkey, null)))
-        {
-            ;//todo: add error handling
-            return false;
-        }
-        prisoners.remove(prisoners.indexOf(new Prisoner(idkey, null)));
+        // TODO: Add find empty section signal to here
+        Section homeSection = null;
+        prisoners.put(id, new Prisoner(id, homeSection));
         return true;
     }
 
+    /**
+     * Updates the home section of a prisoner
+     *
+     * @param id          the id of the prisoner
+     * @param homeSection the new home section of the prisoner
+     * @return true if the update was successful, false otherwise
+     */
+    private boolean updatePrisonerData(String id, Section homeSection) {
+        if (!prisoners.containsKey(id)) {
+            System.err.println("The prisoner with id " + id + " was not found");
+            return false;
+        }
 
+        prisoners.get(id).setHomeSection(homeSection);
+        return true;
+    }
 
+    /**
+     * Deletes a prisoner from the system
+     *
+     * @param id the id of the prisoner
+     * @return true if the prisoner was deleted, false otherwise
+     */
+    private boolean deletePrisoner(String id) {
+        if (!prisoners.containsKey(id)) {
+            System.err.println("The prisoner with id " + id + " was not found");
+            return false;
+        }
 
-
-
-
+        prisoners.remove(id);
+        return true;
+    }
 }

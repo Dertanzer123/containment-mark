@@ -1,13 +1,11 @@
 package types;
 
 public class Signal {
-    public String signalcode;
-    public Object signaldata;
-    public Signal(String signalcode, Object signaldata)
-    {
-        this.signalcode = signalcode;
-        this.signaldata = signaldata;
+    public SignalCode signalCode;
+    public Object signalData;
+
+    public Signal(SignalCode signalCode, Object signalData) {
+        this.signalCode = signalCode;
+        this.signalData = signalData;
     }
-
-
 }
