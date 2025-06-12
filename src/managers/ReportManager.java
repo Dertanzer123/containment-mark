@@ -23,18 +23,24 @@ public class ReportManager extends BaseManager {
     @Override
     public void absorbSignal(Signal signal, BaseManager signalOrigin) {
         switch (signal.signalCode) {
-            case AddReport:
-                Report r = new Report((Report) signal.signalData);
-                addReport(r);
+            case AddReport: {
+                Report report = new Report((Report) signal.signalData);
+                addReport(report);
                 signalBuffer = new Signal(SignalCode.ReportAdded, null);
                 emitSignal(signalOrigin);
                 break;
-            case GetReport:
+            }
+            case GetReport: {
                 int index = (int) signal.signalData;
                 Report r1 = getReport(index);
                 signalBuffer = new Signal(SignalCode.ReportReturn, r1);
                 emitSignal(signalOrigin);
                 break;
+            }
+            default: {
+                System.err.println("Invalid signal received: " + signal.signalData);
+                System.exit(1);
+            }
         }
     }
 

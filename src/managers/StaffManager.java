@@ -22,5 +22,11 @@ public class StaffManager extends BaseManager {
     @Override
     public void absorbSignal(Signal signal, BaseManager signalOrigin) {
         // TODO: absorb signal
+        switch (signal.signalCode) {
+            default: {
+                System.err.println("Invalid signal received: " + signal.signalData);
+                System.exit(1);
+            }
+        }
     }
 }

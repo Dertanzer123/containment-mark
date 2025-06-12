@@ -58,31 +58,34 @@ public class PrisonerManager extends BaseManager {
                 if (addPrisoner(id)) {
                     signalBuffer = new Signal(SignalCode.PrisonerAdded, null);
                 } else {
-                    signalBuffer = new Signal(SignalCode.Error, "Prisoner already exists with same id");
+                    signalBuffer = new Signal(SignalCode.Error, "Prisoner with id " + id + " already exists");
                 }
                 emitSignal(signalOrigin);
-
                 break;
             }
             case UpdatePrisonerData: {
-                Prisoner p = (Prisoner) signal.signalData;
-                if (updatePrisonerData(p.getId(), p.getHomeSection())) {
+                Prisoner prisoner = (Prisoner) signal.signalData;
+                if (updatePrisonerData(prisoner.getId(), prisoner.getHomeSection())) {
                     signalBuffer = new Signal(SignalCode.PrisonerUpdated, null);
                 } else {
-                    signalBuffer = new Signal(SignalCode.Error, "Prisoner already exists with same id");
+                    signalBuffer = new Signal(SignalCode.Error, "Prisoner with id " + prisoner.getId() + " not found");
                 }
                 emitSignal(signalOrigin);
-
                 break;
             }
             case DeletePrisoner: {
-                if (deletePrisoner((String) signal.signalData)) {
+                String id = (String) signal.signalData;
+                if (deletePrisoner(id)) {
                     signalBuffer = new Signal(SignalCode.PrisonerDeleted, null);
                 } else {
                     signalBuffer = new Signal(SignalCode.Error, "Prisoner not found");
                 }
                 emitSignal(signalOrigin);
                 break;
+            }
+            default: {
+                System.err.println("Invalid signal received: " + signal.signalData);
+                System.exit(1);
             }
         }
     }

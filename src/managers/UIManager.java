@@ -2,7 +2,6 @@ package managers;
 
 import core.SystemRoot;
 import types.Signal;
-import types.SignalCode;
 
 public class UIManager extends BaseManager {
     public UIManager(SystemRoot root) {
@@ -20,9 +19,14 @@ public class UIManager extends BaseManager {
     public void absorbSignal(Signal signal, BaseManager signalOrigin) {
         // TODO: Fill the switch cases
         switch (signal.signalCode) {
-            case SignalCode.Error:
-                System.out.println(signal.signalData);//show error message on uı
-                break;
+            case Error: {
+                // Show the error message on the UI
+                System.err.println("Error signal received: " + signal.signalData);
+            }
+            default: {
+                System.err.println("Invalid signal received: " + signal.signalData);
+                System.exit(1);
+            }
         }
     }
 }

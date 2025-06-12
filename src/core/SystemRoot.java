@@ -2,6 +2,7 @@ package core;
 
 import managers.*;
 import types.Signal;
+import types.SignalCode;
 
 /// SystemRoot bridges the managers.
 /// For example, one manager emits a signal with a destination root sends this signal to destination manager the destination manager absorbs and do what it need to do
@@ -27,6 +28,7 @@ public class SystemRoot {
      * @param signalDestination the destination of the signal
      */
     public void bridgeSignals(BaseManager signalOrigin, BaseManager signalDestination) {
+        // If the signal origin and destination are the same, then there is no need to bridge the signal
         if (signalOrigin.equals(signalDestination)) {
             return;
         }
@@ -34,10 +36,15 @@ public class SystemRoot {
         // Get the signal buffer from the origin manager
         Signal signalBuffer = signalOrigin.getSignalBuffer();
 
-        // If the received signal code is null, then the signal buffer is invalid
+        // If the received signal is Error, redirect to the UI manager
+        if (signalBuffer.signalCode == SignalCode.Error) {
+            this.uiManager.absorbSignal(signalBuffer, signalOrigin);
+            return;
+        }
+
+        // If the received signal code is null, then do nothing
         if (signalBuffer.signalCode == null) {
-            System.err.println(signalOrigin + " sent a signal with a null signal code");
-            System.exit(1);
+            return;
         }
 
         // Now send the signal to the destination manager
