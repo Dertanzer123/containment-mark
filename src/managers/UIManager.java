@@ -2,32 +2,23 @@ package managers;
 
 import core.SystemRoot;
 
-public class ReportManager extends BaseManager {
-    public ReportManager(SystemRoot root) {
-        super("ReportManager", root);
+public class UIManager extends BaseManager {
+    public UIManager(SystemRoot root) {
+        super( "UIManager", root);
     }
 
     @Override
     public void emitSignal(String signalDestination) {
 
-
-        root.bridgeSignals(id, signalDestination);
-
-        // TODO: emit signal
     }
 
     @Override
     public void absorbSignal(String signal, String signalOrigin) {
-        // TODO: absorb signal
+
     }
-
-
-
-
 
     @Override
     public String getSignalBuffer() {
         return signalBuffer;
-        // TODO: absorb signal
     }
 }

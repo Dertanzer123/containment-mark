@@ -15,4 +15,24 @@ public class Prisoner {
     public ArrayList<Visit> getVisits() {
         return visits;
     }
+
+    public void addVisit(Visit visit) {
+        visits.add(visit);
+    }
+
+    public void removeVisit(Visit visit) {
+        visits.remove(visit);
+    }
+
+
+    @Override
+    public boolean equals(Object o)
+    {
+       if(o instanceof Prisoner)
+       {
+           Prisoner p = (Prisoner)o;
+           return p.id.equals(id) ;
+       }
+       return false;
+    }
 }

@@ -8,12 +8,26 @@ public class StaffManager extends BaseManager {
     }
 
     @Override
-    public void emitSignal() {
+    public void emitSignal(String signalDestination) {
+
+
+        root.bridgeSignals(id, signalDestination);
+
         // TODO: emit signal
     }
 
     @Override
-    public void absorbSignal() {
+    public void absorbSignal(String signal, String signalOrigin) {
+        // TODO: absorb signal
+    }
+
+
+
+
+
+    @Override
+    public String getSignalBuffer() {
+        return signalBuffer;
         // TODO: absorb signal
     }
 }

@@ -1,5 +1,7 @@
+import core.SystemRoot;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
+        SystemRoot systemRoot = new SystemRoot();
     }
 }
