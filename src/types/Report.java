@@ -2,8 +2,9 @@ package types;
 
 public class Report {
     public enum Origin {
-        PRISONER,
-        STAFF
+        PRISONERM,
+        STAFFM,
+        USER
     }
 
     // Report level is used to indicate the severity of the report -
@@ -15,22 +16,27 @@ public class Report {
         LOW
     }
 
-    private final Origin reportOrigin;
-    private final ReportLevel alertLevel;
-    private final String reportType;
-    private final String reportContent;
+    public final String id;
+    public final Origin reportOrigin;
+    public final ReportLevel alertLevel;
+    public final String reportType;
+    public final String reportContent;
 
-    public Report(Origin reportOrigin, ReportLevel alertLevel, String reportType, String reportContent) {
+    public Report(String id, Origin reportOrigin, ReportLevel alertLevel, String reportType, String reportContent) {
+        this.id = id;
         this.reportOrigin = reportOrigin;
         this.alertLevel = alertLevel;
         this.reportType = reportType;
         this.reportContent = reportContent;
     }
 
-    public Report(Report r) {
-        this.reportOrigin = r.reportOrigin;
-        this.alertLevel = r.alertLevel;
-        this.reportType = r.reportType;
-        this.reportContent = r.reportContent;
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Report r) {
+            return r.id.equals(id);
+        }
+        return false;
     }
+
+
 }

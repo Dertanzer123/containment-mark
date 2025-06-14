@@ -1,9 +1,7 @@
 package types;
 
-public enum SignalCode {
-    // Report codes
-    AddReport,
-    GetReport,
+public enum feedBackCodes {
+
     ReportAdded,
     ReportReturn,
 
@@ -11,19 +9,16 @@ public enum SignalCode {
     UpdateDate,
 
     // Visit codes
-    AddVisit,
-    DeleteVisit,
     VisitAdded,
     VisitDeleted,
 
     // Prisoner codes
-    AddPrisoner,
-    UpdatePrisonerData,
-    DeletePrisoner,
     PrisonerAdded,
     PrisonerUpdated,
     PrisonerDeleted,
 
-    // Error codes
-    Error
+   // Staff codes
+    StaffAdded,
+    StaffUpdated,
+    StaffDeleted,
 }

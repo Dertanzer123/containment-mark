@@ -13,19 +13,10 @@ public class SectionManager extends BaseManager {
         super(root);
     }
 
-    @Override
-    public void emitSignal(BaseManager signalDestination) {
-        root.bridgeSignals(this, signalDestination);
-    }
 
-    @Override
-    public void absorbSignal(Signal signal, BaseManager signalOrigin) {
-        // TODO: absorb signal
-        switch (signal.signalCode) {
-            default: {
-                System.err.println("Invalid signal received: " + signal.signalData);
-                System.exit(1);
-            }
-        }
+    public Section getfreeCellSection()
+    {
+        //todo implement a tree search algorithm to find a free cell
+        return rootSection;
     }
 }
