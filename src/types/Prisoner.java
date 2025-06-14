@@ -1,9 +1,13 @@
 package types;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Prisoner {
     private final String id;
+    private String name;
+    private boolean gender;
+    private Date birthDate;
     private Section homeSection;
     private final ArrayList<Visit> visits = new ArrayList<>();
 

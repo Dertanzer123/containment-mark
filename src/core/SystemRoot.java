@@ -3,6 +3,7 @@ package core;
 import managers.*;
 import types.*;
 
+import java.io.IOException;
 import java.util.Date;
 
 /// SystemRoot bridges the managers.
@@ -14,7 +15,7 @@ public class SystemRoot {
     public final StaffManager staffManager;
     public final UIManager uiManager;
 
-    public SystemRoot() {
+    public SystemRoot() throws IOException {
         this.reportManager = new ReportManager(this);
         this.sectionManager = new SectionManager(this);
         this.prisonerManager = new PrisonerManager(this);
@@ -46,6 +47,7 @@ public class SystemRoot {
                 ec=null;
                 sc=null;
                 signal= uiManager.getSignalBuffer();
+
                 switch (ic)
                 {
                     case inputcode.UpdateDate://todo implement the update date
@@ -127,7 +129,7 @@ public class SystemRoot {
                         {
                             ec=errorcode.NoVisitFound;
                         }
-                        break;
+                        break;//todo add getvisit and implement is on prisoner manager which will return all the visits of the prisoner
                     case inputcode.AddStaff:
                         if(staffManager.addStaff((Staff) signal.signalData))
                         {

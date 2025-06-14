@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>System UI</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .tab-bar {
+            display: flex;
+            background-color: #333;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 14px 20px;
+            color: white;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .tab.active {
+            border-bottom: 3px solid #00bcd4;
+            background-color: #444;
+        }
+        .sub-tab-bar {
+            display: flex;
+            background-color: #555;
+            flex-wrap: wrap;
+        }
+        .sub-tab {
+            padding: 10px 16px;
+            color: white;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .sub-tab.active {
+            border-bottom: 2px solid #ff9800;
+            background-color: #666;
+        }
+        .tab-content, .sub-tab-content {
+            display: none;
+            padding: 20px;
+        }
+        .tab-content.active, .sub-tab-content.active {
+            display: block;
+        }
+        .input-section, .output-section {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .input-section {
+            background: #f9f9f9;
+        }
+        .output-section {
+            background: #eef;
+        }
+        .exit-button {
+            position: fixed; /* fixed to viewport */
+            top: 10px;       /* distance from top */
+            right: 10px;     /* distance from right */
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #f44336; /* red color */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            z-index: 1000;   /* on top of everything */
+        }
+        .exit-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Main Tab Bar -->
+<div class="tab-bar">
+    <div class="tab active" onclick="showTab(0)">Report</div>
+    <div class="tab" onclick="showTab(1)">Visit</div>
+    <div class="tab" onclick="showTab(2)">Prisoner</div>
+    <div class="tab" onclick="showTab(3)">Staff</div>
+</div>
+
+<!-- Report Tab Content -->
+<div class="tab-content active">
+    <div class="sub-tab-bar">
+        <div class="sub-tab active" onclick="showSubTab(0, 0)">Add Report</div>
+        <div class="sub-tab" onclick="showSubTab(0, 1)">Get Report</div>
+    </div>
+    <div class="sub-tab-content active" id="11">
+        <h3>Add Report</h3>
+
+        <div class="input-section">
+            <label for="report-id">Report ID:</label><br />
+            <input type="text" id="report-id" placeholder="Enter Report ID" style="width: 300px;" /><br /><br />
+
+            <label for="report-level">Report Level:</label><br />
+            <select id="report-level" style="width: 150px;">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select><br /><br />
+
+            <label for="report-type">Report Type:</label><br />
+            <input type="text" id="report-type" placeholder="e.g., Incident, Evaluation..." style="width: 300px;" /><br /><br />
+
+            <label for="report-content">Report Content:</label><br />
+            <input type="text" id="report-content" placeholder="report content..." style="width: 400px; height: 30px;" /><br /><br />
+
+
+
+            <button id="submit-report-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('11', 'AddReport')">Submit Report</button>
+        </div>
+    </div>
+    <div class="sub-tab-content" id="12">
+        <h3>Get Report</h3>
+
+        <div class="input-section">
+            <label for="get-report-id">Report ID:</label><br />
+            <input type="text" id="get-report-id" placeholder="Enter Report ID" style="width: 300px;" /><br /><br />
+
+            <button id="get-report-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('12', 'GetReport')">Get Report</button>
+        </div>
+    </div>
+</div>
+
+<!-- Visit Tab Content -->
+<div class="tab-content">
+    <div class="sub-tab-bar">
+        <div class="sub-tab active" onclick="showSubTab(1, 0)">Add Visit</div>
+        <div class="sub-tab" onclick="showSubTab(1, 1)">Delete Visit</div>
+        <div class="sub-tab" onclick="showSubTab(1, 2)">Get Visit</div>
+    </div>
+    <div class="sub-tab-content active" id="21">
+        <h3>Add Visit</h3>
+
+        <div class="input-section">
+            <label for="add-visit-prisoner-id">Prisoner ID:</label><br />
+            <input type="text" id="add-visit-prisoner-id" /><br /><br />
+
+            <label for="add-visit-name">Visitor Name:</label><br />
+            <input type="text" id="add-visit-name" /><br /><br />
+
+            <label for="add-visit-date">Date:</label><br />
+            <input type="date" id="add-visit-date" /><br /><br />
+
+            <label for="add-visit-reason">Reason:</label><br />
+            <input type="text" id="add-visit-reason" /><br /><br />
+
+            <button id="add-visit-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('21', 'AddVisit')">Add Visit</button>
+        </div>
+    </div>
+
+    <div class="sub-tab-content" id="22">
+        <h3>Delete Visit</h3>
+
+        <div class="input-section">
+            <label for="delete-visit-prisoner-id">Prisoner ID:</label><br />
+            <input type="text" id="delete-visit-prisoner-id" /><br /><br />
+
+            <label for="delete-visit-name">Visitor Name:</label><br />
+            <input type="text" id="delete-visit-name" /><br /><br />
+
+            <label for="delete-visit-date">Date:</label><br />
+            <input type="date" id="delete-visit-date" /><br /><br />
+
+            <label for="delete-visit-reason">Reason:</label><br />
+            <input type="text" id="delete-visit-reason" /><br /><br />
+
+            <button id="delete-visit-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('22', 'DeleteVisit')">Delete Visit</button>
+        </div>
+    </div>
+
+    <div class="sub-tab-content" id="23">
+        <h3>Get Visits</h3>
+
+        <div class="input-section">
+            <label for="get-visits-prisoner-id">Prisoner ID:</label><br />
+            <input type="text" id="get-visits-prisoner-id" /><br /><br />
+
+            <button id="get-visits-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('23', 'GetVisits')">Get Visits</button>
+        </div>
+    </div>
+</div>
+
+<!-- Prisoner Tab Content -->
+<div class="tab-content">
+    <div class="sub-tab-bar">
+        <div class="sub-tab active" onclick="showSubTab(3, 0)">Add Prisoner</div>
+        <div class="sub-tab" onclick="showSubTab(3, 1)">Update Prisoner</div>
+        <div class="sub-tab" onclick="showSubTab(3, 2)">Delete Prisoner</div>
+        <div class="sub-tab" onclick="showSubTab(3, 3)">Get Prisoner</div>
+    </div>
+    <div class="sub-tab-content active" id="31">
+        <h3>Add Prisoner</h3>
+        <div class="input-section">
+            <label for="add-prisoner-id">ID:</label><br />
+            <input type="text" id="add-prisoner-id" /><br /><br />
+
+            <label for="add-prisoner-name">Name:</label><br />
+            <input type="text" id="add-prisoner-name" /><br /><br />
+
+            <label for="add-prisoner-gender">Gender:</label><br />
+            <select id="add-prisoner-gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select><br /><br />
+
+            <label for="add-prisoner-birthdate">Birthdate:</label><br />
+            <input type="date" id="add-prisoner-birthdate" /><br /><br />
+
+            <button id="add-prisoner-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('31', 'AddPrisoner')">Add Prisoner</button>
+        </div>
+    </div>
+    <div class="sub-tab-content" id="32">
+        <h3>Update Prisoner</h3>
+        <div class="input-section">
+            <label for="update-prisoner-id">ID:</label><br />
+            <input type="text" id="update-prisoner-id" /><br /><br />
+
+            <label for="update-prisoner-name">Name:</label><br />
+            <input type="text" id="update-prisoner-name" /><br /><br />
+
+            <label for="update-prisoner-gender">Gender:</label><br />
+            <select id="update-prisoner-gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select><br /><br />
+
+            <label for="update-prisoner-birthdate">Birthdate:</label><br />
+            <input type="date" id="update-prisoner-birthdate" /><br /><br />
+
+            <button id="update-prisoner-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('32', 'UpdatePrisoner')">Update Prisoner</button>
+        </div>
+    </div>
+    <div class="sub-tab-content" id="33">
+        <h3>Delete Prisoner</h3>
+        <div class="input-section">
+            <label for="delete-prisoner-id">ID:</label><br />
+            <input type="text" id="delete-prisoner-id" /><br /><br />
+
+            <button id="delete-prisoner-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('33', 'DeletePrisoner')">Delete Prisoner</button>
+        </div>
+    </div>
+    <div class="sub-tab-content" id="34">
+        <h3>Get Prisoner</h3>
+        <div class="input-section">
+            <label for="get-prisoner-id">ID:</label><br />
+            <input type="text" id="get-prisoner-id" /><br /><br />
+
+            <button id="get-prisoner-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('34', 'GetPrisoner')">Get Prisoner</button>
+        </div>
+    </div>
+</div>
+
+<!-- Staff Tab Content -->
+
+<div class="tab-content">
+    <div class="sub-tab-bar">
+        <div class="sub-tab active" onclick="showSubTab(3, 0)">Add Staff</div>
+        <div class="sub-tab" onclick="showSubTab(3, 1)">Update Staff</div>
+        <div class="sub-tab" onclick="showSubTab(3, 2)">Delete Staff</div>
+        <div class="sub-tab" onclick="showSubTab(3, 3)">Get Staff</div>
+    </div>
+
+    <div class="sub-tab-content active" id="41">
+        <h3>Add Staff</h3>
+        <div class="input-section">
+            <label for="add-staff-id">ID:</label><br />
+            <input type="text" id="add-staff-id" /><br /><br />
+
+            <label for="add-staff-name">Name:</label><br />
+            <input type="text" id="add-staff-name" /><br /><br />
+
+            <label for="add-staff-gender">Gender:</label><br />
+            <select id="add-staff-gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select><br /><br />
+
+            <label for="add-staff-birthdate">Birthdate:</label><br />
+            <input type="date" id="add-staff-birthdate" /><br /><br />
+
+            <button id="add-staff-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('41', 'AddStaff')">Add Staff</button>
+        </div>
+    </div>
+
+    <div class="sub-tab-content" id="42">
+        <h3>Update Staff</h3>
+        <div class="input-section">
+            <label for="update-staff-id">ID:</label><br />
+            <input type="text" id="update-staff-id" /><br /><br />
+
+            <label for="update-staff-name">Name:</label><br />
+            <input type="text" id="update-staff-name" /><br /><br />
+
+            <label for="update-staff-gender">Gender:</label><br />
+            <select id="update-staff-gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select><br /><br />
+
+            <label for="update-staff-birthdate">Birthdate:</label><br />
+            <input type="date" id="update-staff-birthdate" /><br /><br />
+
+            <button id="update-staff-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('42', 'UpdateStaff')">Update Staff</button>
+        </div>
+    </div>
+
+    <div class="sub-tab-content" id="43">
+        <h3>Delete Staff</h3>
+        <div class="input-section">
+            <label for="delete-staff-id">ID:</label><br />
+            <input type="text" id="delete-staff-id" /><br /><br />
+
+            <button id="delete-staff-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('43', 'DeleteStaff')">Delete Staff</button>
+        </div>
+    </div>
+
+    <div class="sub-tab-content" id="44">
+        <h3>Get Staff</h3>
+        <div class="input-section">
+            <label for="get-staff-id">ID:</label><br />
+            <input type="text" id="get-staff-id" /><br /><br />
+
+            <button id="get-staff-btn" style="padding: 8px 16px; font-weight: bold;" onclick="gatherAndSend('44', 'GetStaff')">Get Staff</button>
+        </div>
+    </div>
+</div>
+
+<!-- Exit Button -->
+<button class="exit-button" onclick="sendCommand('exit', {})">Exit System</button>
+
+<script>
+    let currentMainTab = 0;
+    let currentSubTabs = [0, 0, 0, 0]; // Default sub-tab for each main tab
+
+    function showTab(index) {
+        document.querySelectorAll('.tab').forEach((el, i) =>
+            el.classList.toggle('active', i === index)
+        );
+        document.querySelectorAll('.tab-content').forEach((el, i) =>
+            el.classList.toggle('active', i === index)
+        );
+        currentMainTab = index;
+        updateSubTabs(index, currentSubTabs[index]);
+    }
+
+    function showSubTab(mainIndex, subIndex) {
+        const tabContents = document.querySelectorAll('.tab-content')[mainIndex];
+        const subTabs = tabContents.querySelectorAll('.sub-tab');
+        const subContents = tabContents.querySelectorAll('.sub-tab-content');
+
+        subTabs.forEach((el, i) => el.classList.toggle('active', i === subIndex));
+        subContents.forEach((el, i) => el.classList.toggle('active', i === subIndex));
+
+        currentSubTabs[mainIndex] = subIndex;
+    }
+
+    function updateSubTabs(mainIndex, subIndex) {
+        showSubTab(mainIndex, subIndex);
+    }
+
+
+
+    function gatherAndSend(subtabId, inputCode) {
+        const container = document.getElementById(subtabId);
+        if (!container) {
+            alert("Subtab container not found!");
+            return;
+        }
+
+        // Collect all inputs inside the container
+        const inputs = container.querySelectorAll('input, select, textarea');
+
+        const params = {};
+        inputs.forEach(input => {
+            // You can adjust the property to use input.name or input.id as the param name
+            const paramName = input.name || input.id;
+            if (paramName) {
+                params[paramName] = input.value;
+            }
+        });
+
+        sendCommand(inputCode, params);
+    }
+
+    function sendCommand(inputCode, params) {
+        // Pack the params object into the string format
+        const paramString = Object.entries(params)
+            .map(([key, value]) => `${key}:${value}`)
+            .join(',');
+
+        const bodyString = `${inputCode},${paramString}`;
+
+        fetch("http://localhost:8080/submit", {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: bodyString
+        })
+            .then(res => res.text())
+            .then(text => {
+                alert("Response: " + text);
+            })
+            .catch(err => {
+                alert("Failed to send command: " + err.message);
+            });
+    }
+    function sendExit() {
+        fetch("http://localhost:8080/submit", {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: "exit"
+        }).then(res => res.text()).then(text => {
+            alert("System Exit: " + text);
+        }).catch(err => {
+            alert("Failed to exit: " + err.message);
+        });
+    }
+</script>
+
+</body>
+</html>

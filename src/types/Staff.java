@@ -1,9 +1,13 @@
 package types;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Staff {
     private final String id;
+    private String name;
+    private boolean gender;
+    private Date birthDate;
     private final ArrayList<Section> sections = new ArrayList<>();
 
     public Staff(String id) {

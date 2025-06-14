@@ -1,18 +1,64 @@
 package managers;
 
+import com.sun.net.httpserver.HttpServer;
 import core.SystemRoot;
-import types.Signal;
-import types.feedBackCodes;
-import types.errorcode;
-import types.inputcode;
+import helper.WebServer;
+import types.*;
 
+import java.net.InetSocketAddress;
 import java.util.Date;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import java.io.*;
+import java.awt.Desktop;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 public class UIManager extends BaseManager {
-    public UIManager(SystemRoot root) {
-        super(root);
-    }
+
+
     public Date lastUpdateDate ;
+    private final BlockingQueue<UIInput> inputQueue = new LinkedBlockingQueue<>();
+
+
+    public UIManager(SystemRoot root) throws IOException {
+
+        super(root);
+
+        WebServer.start(this);
+
+        openHTML("src/UI.html");
+    }
+
+    public static void openHTML(String filepath) {
+        try {
+            File htmlFile = new File(filepath); // path to your file
+            if (htmlFile.exists() && Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(htmlFile.toURI());
+            } else {
+                System.out.println("Cannot open browser.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void receiveInput(UIInput input) {
+        inputQueue.offer(input);
+    }
+
+    public UIInput waitForInput() {
+        try {
+            return inputQueue.take(); // This waits until UI sends input
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        }
+    }
+
 
     public inputcode getUserInput(feedBackCodes feedbackcode, errorcode errorcode) {//signalcode might not be nececery depending on the next developments
         //todo implement user interface and return user input to the system root
@@ -87,12 +133,16 @@ public class UIManager extends BaseManager {
             }
 
         }
-        inputcode userInput =null;
+        inputcode userInput =inputcode.exit;
         //todo impplement taking input from user if necessary update the signal buffer and return the user input ,also implement date based updating and store the last update date so it can update if it was more than one day even if the system not opened
+       UIInput input = waitForInput();
+        System.out.println("Code: " + input.inputcode);
+        System.out.println("Params: " + input.parameters);
         return userInput;
     }
     public void writeSignalBuffer(Signal signal)
     {
         signalBuffer=signal;
     }
+
 }
