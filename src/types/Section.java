@@ -22,12 +22,12 @@ public class Section {
         child.parent = this;
     }
 
-    public boolean isfree() {
+    public boolean isFree() {
         return capacity > prisoners.size();
     }
 
     public boolean addPrisoner(Prisoner p) {
-        if (isfree()) {
+        if (isFree()) {
             prisoners.add(p);
             return true;
         }
