@@ -43,7 +43,7 @@ public class UIManager extends BaseManager {
                 System.out.println("Cannot open browser.");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error opening HTML file: " + e.getMessage());
         }
     }
 
