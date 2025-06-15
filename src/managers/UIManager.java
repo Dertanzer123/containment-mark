@@ -200,10 +200,7 @@ public class UIManager extends BaseManager {
                 String prisonBirthDate = parameters.get("add-prison-birthdate");
                 LocalDate birthDate = LocalDate.parse(prisonBirthDate);
 
-                // TODO: Somehow get a section for the new prisoner
-//                Section freeCell = sectionManager.getFreeCellSection();
-                Section freeCell = new Section("TODO", null);
-                signalBuffer = new Signal(new Prisoner(prisonerId, prisonName, prisonGender, birthDate, freeCell));
+                signalBuffer = new Signal(new Prisoner(prisonerId, prisonName, prisonGender, birthDate, null));
                 break;
             }
             case UpdatePrisonerData: {
@@ -213,12 +210,7 @@ public class UIManager extends BaseManager {
                 String prisonBirthDate = parameters.get("update-prison-birthdate");
                 LocalDate birthDate = LocalDate.parse(prisonBirthDate);
 
-                // TODO: Somehow get a section for the prisoner
-//                Section freeCell = sectionManager.getFreeCellSection();
-                Section freeCell = new Section("TODO", null);
-
-                // TODO: As far as I understand, send the prisoner as a signal so it can be updated
-                Prisoner prisoner = new Prisoner(prisonerId, prisonName, prisonGender, birthDate, freeCell);
+                Prisoner prisoner = new Prisoner(prisonerId, prisonName, prisonGender, birthDate, null);
                 signalBuffer = new Signal(prisoner);
                 break;
             }

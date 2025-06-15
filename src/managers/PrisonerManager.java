@@ -6,8 +6,8 @@ import types.Section;
 import types.Signal;
 import types.Visit;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 public class PrisonerManager extends BaseManager {
@@ -21,20 +21,19 @@ public class PrisonerManager extends BaseManager {
     /**
      * Adds a visit to a prisoner
      *
-     * @param prisoner the prisoner that is being visited
-     * @param name     the name of the visitor
-     * @param date     the date of the visit
-     * @param reason   the reason for the visit
+     * @param prisonerID the prisoner that is being visited
+     * @param name       the name of the visitor
+     * @param date       the date of the visit
+     * @param reason     the reason for the visit
      * @return true if the visit was added, false otherwise
      */
-    public boolean addVisit(Prisoner prisoner, String name, Date date, String reason) {
-        String id = prisoner.getId();
-        if (!prisoners.containsKey(id)) {
-
+    public boolean addVisit(String prisonerID, String name, LocalDate date, String reason) {
+        if (!prisoners.containsKey(prisonerID)) {
             return false;
         }
+        Prisoner prisoner = prisoners.get(prisonerID);
 
-        Visit visit = new Visit(prisoner, name, date, reason);
+        Visit visit = new Visit(prisonerID, name, date, reason);
         visits.add(visit);
         prisoner.addVisit(visit);
 
@@ -42,7 +41,7 @@ public class PrisonerManager extends BaseManager {
     }
 
     public boolean addVisit(Visit visit) {
-        if (addVisit(visit.visitedPrisoner(), visit.name(), visit.date(), visit.reason())) {
+        if (addVisit(visit.prisonerID(), visit.name(), visit.date(), visit.reason())) {
             signalBuffer = new Signal(visit);
             return true;
         }
@@ -57,12 +56,12 @@ public class PrisonerManager extends BaseManager {
      * @return true if the visit was deleted, false otherwise
      */
     public boolean deleteVisit(Visit visit) {
-        Prisoner prisoner = visit.visitedPrisoner();
-        String id = prisoner.getId();
-
+        String id = visit.prisonerID();
         if (!prisoners.containsKey(id)) {
             return false;
         }
+
+        Prisoner prisoner = prisoners.get(id);
 
         prisoner.removeVisit(visit);
         visits.remove(visit);
@@ -75,10 +74,10 @@ public class PrisonerManager extends BaseManager {
      *
      * @param currentDate the current date
      */
-    public boolean updateVisits(Date currentDate) {
+    public boolean updateVisits(LocalDate currentDate) {
         for (Visit visit : visits) {
             // TODO: add create report signal to updateVisits
-            if (visit.date().before(currentDate)) {
+            if (visit.date().isBefore(currentDate)) {
                 deleteVisit(visit);
                 return true;
             }
@@ -89,15 +88,17 @@ public class PrisonerManager extends BaseManager {
     /**
      * Adds a new prisoner to the system
      *
-     * @param id the id of the prisoner
+     * @param prisoner the prisoner to add
      * @return true if the prisoner was added, false otherwise
      */
-    public boolean addPrisoner(String id, Section homeSection) {
+    public boolean addPrisoner(Prisoner prisoner, Section freeCell) {
+        String id = prisoner.getId();
         if (prisoners.containsKey(id)) {
             return false;
         }
+        prisoner.setHomeSection(freeCell);
 
-        prisoners.put(id, new Prisoner(id, homeSection));
+        prisoners.put(id, prisoner);
         // TODO: Add report to signal buffer
         return true;
     }
@@ -105,17 +106,18 @@ public class PrisonerManager extends BaseManager {
     /**
      * Updates the home section of a prisoner
      *
-     * @param id          the id of the prisoner
+     * @param prisoner    the prisoner to update
      * @param homeSection the new home section of the prisoner
      * @return true if the update was successful, false otherwise
      */
-    public boolean updatePrisonerData(String id, Section homeSection) {
+    public boolean updatePrisonerData(Prisoner prisoner, Section homeSection) {
+        String id = prisoner.getId();
         if (!prisoners.containsKey(id)) {
             System.err.println("The prisoner with id " + id + " was not found");
             return false;
         }
 
-        prisoners.get(id).setHomeSection(homeSection);
+        prisoner.setHomeSection(homeSection);
         return true;
     }
 

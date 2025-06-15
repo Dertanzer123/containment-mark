@@ -4,7 +4,7 @@ import managers.*;
 import types.*;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 
 /// SystemRoot bridges the managers.
 /// For example, one manager emits a signal with a destination root sends this signal to destination manager the destination manager absorbs and does what it needs to do
@@ -43,20 +43,20 @@ public class SystemRoot {
                 signal = uiManager.getSignalBuffer();
 
                 switch (ic) {
-                    case InputCode.UpdateDate: // TODO: : Implement the update date
+                    case UpdateDate: // TODO: : Implement the update date
                         signal = uiManager.getSignalBuffer(); //get the date from the uimanager (not user)
-                        prisonerManager.updateVisits((Date) signal.signalData);
+                        prisonerManager.updateVisits((LocalDate) signal.signalData);
                         sc = FeedbackCodes.UpdateDate;
                         break;
-                    case InputCode.Exit:
+                    case Exit:
                         exit = true;
                         break;
-                    case InputCode.AddReport:
+                    case AddReport:
                         signal = uiManager.getSignalBuffer();//get the report from the uimanager (user)
                         reportManager.addReport((Report) signal.signalData);
                         sc = FeedbackCodes.ReportAdded;
                         break;
-                    case InputCode.GetReport:
+                    case GetReport:
                         signal = uiManager.getSignalBuffer();//get the id from the uimanager (user)
                         Report r = reportManager.getReport((String) signal.signalData);
                         if (r == null) {
@@ -67,10 +67,9 @@ public class SystemRoot {
                             sc = FeedbackCodes.ReportReturn;
                         }
                         break;
-                    case InputCode.AddPrisoner:
-
+                    case AddPrisoner:
                         Section freeCell = sectionManager.getfreeCellSection();
-                        if (prisonerManager.addPrisoner((String) signal.signalData, freeCell)) {
+                        if (prisonerManager.addPrisoner((Prisoner) signal.signalData, freeCell)) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
                             sc = FeedbackCodes.PrisonerAdded;
@@ -79,9 +78,9 @@ public class SystemRoot {
                         }
 
                         break;
-                    case InputCode.UpdatePrisonerData: {
+                    case UpdatePrisonerData: {
                         // TODO: Get the cell from the user
-                        if (prisonerManager.updatePrisonerData((String) signal.signalData, sectionManager.getfreeCellSection())) {
+                        if (prisonerManager.updatePrisonerData((Prisoner) signal.signalData, sectionManager.getfreeCellSection())) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
                             sc = FeedbackCodes.PrisonerUpdated;
@@ -89,7 +88,7 @@ public class SystemRoot {
                         ec = ErrorCode.NoPrisonerFound;
                         break;
                     }
-                    case InputCode.DeletePrisoner: {
+                    case DeletePrisoner: {
                         if (prisonerManager.deletePrisoner((String) signal.signalData)) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
@@ -98,7 +97,7 @@ public class SystemRoot {
                         ec = ErrorCode.NoPrisonerFound;
                         break;
                     }
-                    case InputCode.AddVisit: {
+                    case AddVisit: {
                         if (prisonerManager.addVisit((Visit) signal.signalData)) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
@@ -108,7 +107,7 @@ public class SystemRoot {
                         }
                         break;
                     }
-                    case InputCode.DeleteVisit: {
+                    case DeleteVisit: {
                         if (prisonerManager.deleteVisit((Visit) signal.signalData)) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
@@ -119,7 +118,7 @@ public class SystemRoot {
                         // TODO: Add getVisit and implement is on prisoner manager which will return all the visits of the prisoner
                         break;
                     }
-                    case InputCode.AddStaff: {
+                    case AddStaff: {
                         if (staffManager.addStaff((Staff) signal.signalData)) {
                             signal = staffManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
@@ -129,7 +128,7 @@ public class SystemRoot {
                         }
                         break;
                     }
-                    case InputCode.UpdateStaffData: {
+                    case UpdateStaffData: {
                         if (staffManager.updateStaffData((Staff) signal.signalData)) {
                             signal = staffManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
@@ -139,7 +138,7 @@ public class SystemRoot {
                         }
                         break;
                     }
-                    case InputCode.DeleteStaff: {
+                    case DeleteStaff: {
                         if (staffManager.deleteStaff((Staff) signal.signalData)) {
                             signal = staffManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
@@ -149,11 +148,11 @@ public class SystemRoot {
                         }
                         break;
                     }
-                    case InputCode.GetPrisoner:// TODO: Implement getters and return the data to the uimanager through the signal buffer maybe add getters for all the list of data so it can be displayed
+                    case GetPrisoner:// TODO: Implement getters and return the data to the uimanager through the signal buffer maybe add getters for all the list of data so it can be displayed
                         break;
-                    case InputCode.GetVisit:
+                    case GetVisit:
                         break;
-                    case InputCode.GetStaff:
+                    case GetStaff:
                         break;
 
                 }
