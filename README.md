@@ -5,6 +5,7 @@
 ![Commits](https://img.shields.io/github/commit-activity/t/Dertanzer123/containment-mark)
 ![Last Commit](https://img.shields.io/github/last-commit/Dertanzer123/containment-mark)
 ![Team](https://img.shields.io/badge/team-Dertanzer123%20%7C%20TcePrepK%20%7C%20Alaatftin-yellow)
+![Total Views](https://visitor-badge.laobi.icu/badge?page_id=Dertanzer123.containment-mark&)
 
 ### Dokuz Eylül University – Department of Computer Engineering
 
