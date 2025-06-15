@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Date;
 
 /// SystemRoot bridges the managers.
-/// For example, one manager emits a signal with a destination root sends this signal to destination manager the destination manager absorbs and do what it need to do
+/// For example, one manager emits a signal with a destination root sends this signal to destination manager the destination manager absorbs and does what it needs to do
 public class SystemRoot {
     public final ReportManager reportManager;
     public final SectionManager sectionManager;
