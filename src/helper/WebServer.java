@@ -15,6 +15,7 @@ public class WebServer {
 
     public static void start(UIManager uiManager) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        uiManager.setServer(server);
 
         server.createContext("/submit", new HttpHandler() {
             public void handle(HttpExchange exchange) throws IOException {

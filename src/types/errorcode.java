@@ -10,4 +10,6 @@ public enum errorcode {
 
     sameIdStaff,
     noStaffFound,
+
+    NoReportFound,
 }

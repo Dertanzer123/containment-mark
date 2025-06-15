@@ -21,6 +21,7 @@ public class UIManager extends BaseManager {
 
     public Date lastUpdateDate ;
     private final BlockingQueue<UIInput> inputQueue = new LinkedBlockingQueue<>();
+    private HttpServer server;
 
 
     public UIManager(SystemRoot root) throws IOException {
@@ -30,6 +31,10 @@ public class UIManager extends BaseManager {
         WebServer.start(this);
 
         openHTML("src/UI.html");
+    }
+
+    public void setServer(HttpServer server) {
+        this.server = server;
     }
 
     public static void openHTML(String filepath) {
@@ -133,11 +138,100 @@ public class UIManager extends BaseManager {
             }
 
         }
-        inputcode userInput =inputcode.exit;
+        inputcode userInput = null;
         //todo impplement taking input from user if necessary update the signal buffer and return the user input ,also implement date based updating and store the last update date so it can update if it was more than one day even if the system not opened
        UIInput input = waitForInput();
         System.out.println("Code: " + input.inputcode);
         System.out.println("Params: " + input.parameters);
+        switch (input.inputcode) {
+            case "AddReport":
+                userInput = inputcode.AddReport;
+                Report.ReportLevel reportLevel;
+                switch (input.parameters.get("report-level")) {
+                    case "high":
+                        reportLevel = Report.ReportLevel.HIGH;
+                        break;
+                    case "medium":
+                        reportLevel = Report.ReportLevel.MEDIUM;
+                        break;
+                    case "low":
+                        reportLevel = Report.ReportLevel.LOW;
+                        break;
+                    default:
+                        reportLevel = Report.ReportLevel.LOW;
+                        break;
+                }
+
+                signalBuffer = new Signal(new Report(input.parameters.get("report-id"), Report.Origin.USER, reportLevel, input.parameters.get("report-type"), input.parameters.get("report-content")));
+                break;
+            case "GetReport":
+                userInput = inputcode.GetReport;
+                signalBuffer =new Signal((String) input.parameters.get("get-report-id"));
+                break;
+            case "UpdateDate":
+                userInput = inputcode.UpdateDate;
+                break;
+            case "AddVisit":
+                userInput = inputcode.AddVisit;//todo control and bugfix switches from now down
+                signalBuffer = new Signal(new Visit(new Prisoner(input.parameters.get("add-visit-prisoner-id"),null),input.parameters.get("add-visit-name"),new Date(Long.parseLong(input.parameters.get("add-visit-date"))),input.parameters.get("add-visit-reason")));//todo parse date correctly
+                break;
+            case "DeleteVisit":
+                userInput = inputcode.DeleteVisit;
+                signalBuffer = new Signal(new Visit(new Prisoner(input.parameters.get("delete-visit-prisoner-id"),null),input.parameters.get("delete-visit-name"),new Date(Long.parseLong(input.parameters.get("delete-visit-date"))),input.parameters.get("delete-visit-reason")));//todo parse date correctly
+                break;
+            case "GetVisit":
+                userInput = inputcode.GetVisit;
+                signalBuffer =new Signal((String) input.parameters.get("get-visit-prisoner-id"));
+                break;
+            case "AddPrisoner":
+                userInput = inputcode.AddPrisoner;
+                //todo add date parsing from string and find a way to add fields to prisoner with signal buffer
+                signalBuffer =new Signal((String) input.parameters.get("add-prisoner-id"));
+
+                break;
+            case "UpdatePrisonerData":
+                userInput = inputcode.UpdatePrisonerData;//todo same as add prison but with update
+                signalBuffer =new Signal((String) input.parameters.get("update-prisoner-id"));
+                break;
+            case "DeletePrisoner":
+                userInput = inputcode.DeletePrisoner;
+                signalBuffer =new Signal((String) input.parameters.get("delete-prisoner-id"));
+                break;
+            case "GetPrisoner":
+                userInput = inputcode.GetPrisoner;
+                signalBuffer =new Signal((String) input.parameters.get("get-prisoner-id"));
+                break;
+            case "AddStaff":
+                userInput = inputcode.AddStaff;
+                signalBuffer =new Signal((String) input.parameters.get("add-staff-id"));//todo find a way to add fields to staff with signal buffer
+                break;
+            case "UpdateStaffData":
+                userInput = inputcode.UpdateStaffData;
+                signalBuffer=new Signal((String) input.parameters.get("update-staff-id"));
+
+                break;
+            case "DeleteStaff":
+                userInput = inputcode.DeleteStaff;
+                signalBuffer =new Signal((String) input.parameters.get("delete-staff-id"));
+                break;
+            case "GetStaff":
+                userInput = inputcode.GetStaff;
+                signalBuffer =new Signal((String) input.parameters.get("get-staff-id"));
+                break;
+            case "exit":
+                userInput = inputcode.exit;
+
+                break;
+
+
+        }
+
+
+
+        if(userInput.equals(inputcode.exit))
+        {
+            server.stop(0);
+        }
         return userInput;
     }
     public void writeSignalBuffer(Signal signal)

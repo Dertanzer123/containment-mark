@@ -20,7 +20,12 @@ public class ReportManager extends BaseManager {
     }
 
     public Report getReport(String id) {
-        return Reports.get(Reports.indexOf(new Report(id,null,null,null,null)));//todo change this with a hasmap get method
+        int index = Reports.indexOf(new Report(id,null,null,null,null));
+        if(index==-1)
+        {
+            return null;
+        }
+        return Reports.get(index);//todo change this with a hasmap get method
     }
 
 

@@ -33,7 +33,7 @@ public class Report {
     @Override
     public boolean equals(Object o) {
         if (o instanceof Report r) {
-            return r.id.equals(id);
+            return (r.id).equals(this.id);
         }
         return false;
     }

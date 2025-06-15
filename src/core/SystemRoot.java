@@ -48,26 +48,29 @@ public class SystemRoot {
                 sc=null;
                 signal= uiManager.getSignalBuffer();
 
-                switch (ic)
-                {
+                switch (ic) {
                     case inputcode.UpdateDate://todo implement the update date
                         signal = uiManager.getSignalBuffer();//get the date from the uimanager (not user)
                         prisonerManager.updateVisits((Date) signal.signalData);
-                        sc=feedBackCodes.UpdateDate;
+                        sc = feedBackCodes.UpdateDate;
                         break;
                     case inputcode.exit:
-                        exit=true;
+                        exit = true;
                         break;
                     case inputcode.AddReport:
                         signal = uiManager.getSignalBuffer();//get the report from the uimanager (user)
                         reportManager.addReport((Report) signal.signalData);
-                        sc=feedBackCodes.ReportAdded;
+                        sc = feedBackCodes.ReportAdded;
                         break;
                     case inputcode.GetReport:
                         signal = uiManager.getSignalBuffer();//get the id from the uimanager (user)
-                        Report r=reportManager.getReport((String) signal.signalData);
-                        uiManager.writeSignalBuffer(new Signal(r));//todo get the report from the buffer when report returned
-                        sc=feedBackCodes.ReportReturn;
+                        Report r = reportManager.getReport((String) signal.signalData);
+                        if (r == null) {
+                            ec = errorcode.NoReportFound;
+                        } else{
+                            uiManager.writeSignalBuffer(new Signal(r));//todo get the report from the buffer when report returned
+                        sc = feedBackCodes.ReportReturn;
+                        }
                         break;
                     case inputcode.AddPrisoner:
 

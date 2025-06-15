@@ -13,6 +13,7 @@ public class Prisoner {
 
     public Prisoner(String id, Section homeSection) {
         this.id = id;
+
         this.homeSection = homeSection;
         homeSection.addPrisoner(this);
     }
