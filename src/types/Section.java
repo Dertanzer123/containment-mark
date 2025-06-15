@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Section {
     private final String id;
     private Section parent;
-    public boolean iscell;
+    public boolean isCell;
     private int capacity;
 
     private final ArrayList<Section> children = new ArrayList<>();
@@ -21,18 +21,17 @@ public class Section {
         children.add(child);
         child.parent = this;
     }
-    public boolean isfree()
-    {
-        return capacity>prisoners.size();
-    }
-    public boolean addPrisoner(Prisoner p)
-    {
-        if(isfree())
-        {
-        prisoners.add(p);
-        return true;
-        }
-        else return false;
+
+    public boolean isfree() {
+        return capacity > prisoners.size();
     }
 
+    public boolean addPrisoner(Prisoner p) {
+        if (isfree()) {
+            prisoners.add(p);
+            return true;
+        }
+
+        return false;
+    }
 }

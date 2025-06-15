@@ -1,6 +1,6 @@
 package types;
 
-public enum inputcode{
+public enum InputCode {
     AddReport,
     GetReport,
     UpdateDate,// this can come automatically not user inputed
@@ -19,8 +19,5 @@ public enum inputcode{
     DeleteStaff,
     GetStaff,
 
-    exit,
-
-
-
+    Exit,
 }

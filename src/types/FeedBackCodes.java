@@ -1,7 +1,7 @@
 package types;
 
-public enum feedBackCodes {
-
+public enum FeedBackCodes {
+    // Report codes
     ReportAdded,
     ReportReturn,
 
@@ -17,7 +17,7 @@ public enum feedBackCodes {
     PrisonerUpdated,
     PrisonerDeleted,
 
-   // Staff codes
+    // Staff codes
     StaffAdded,
     StaffUpdated,
     StaffDeleted,

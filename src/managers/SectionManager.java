@@ -2,7 +2,6 @@ package managers;
 
 import core.SystemRoot;
 import types.Section;
-import types.Signal;
 
 public class SectionManager extends BaseManager {
     Section rootSection;
@@ -13,10 +12,8 @@ public class SectionManager extends BaseManager {
         super(root);
     }
 
-
-    public Section getfreeCellSection()
-    {
-        //todo implement a tree search algorithm to find a free cell
+    public Section getfreeCellSection() {
+        // TODO: Implement a tree search algorithm to find a free cell
         return rootSection;
     }
 }

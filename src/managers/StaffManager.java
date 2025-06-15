@@ -1,7 +1,6 @@
 package managers;
 
 import core.SystemRoot;
-import types.Signal;
 import types.Staff;
 
 import java.util.ArrayList;
@@ -14,35 +13,31 @@ public class StaffManager extends BaseManager {
         super(root);
     }
 
-    public boolean addStaff(Staff s)
-    {
-        if(staffs.contains(s))
-        {
+    public boolean addStaff(Staff s) {
+        if (staffs.contains(s)) {
             return false;
         }
         staffs.add(s);
-        //todo add report to signal buffer
+        // TODO: Add report to signal buffer
         return true;
     }
-    public boolean updateStaffData(Staff s)
-    {
-        if(!staffs.contains(s))
-        {
+
+    public boolean updateStaffData(Staff s) {
+        if (!staffs.contains(s)) {
             return false;
         }
         staffs.remove(s);
         staffs.add(s);
-        //todo add report to signal buffer
+        // TODO: Add report to signal buffer
         return true;
     }
-    public boolean deleteStaff(Staff s)
-    {
-        if(!staffs.contains(s))
-        {
+
+    public boolean deleteStaff(Staff s) {
+        if (!staffs.contains(s)) {
             return false;
         }
         staffs.remove(s);
-        //todo add report to signal buffer
+        // TODO: Add report to signal buffer
         return true;
     }
 

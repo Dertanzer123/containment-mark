@@ -1,7 +1,10 @@
 package managers;
 
 import core.SystemRoot;
-import types.*;
+import types.Prisoner;
+import types.Section;
+import types.Signal;
+import types.Visit;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,10 +17,6 @@ public class PrisonerManager extends BaseManager {
     public PrisonerManager(SystemRoot root) {
         super(root);
     }
-
-
-
-
 
     /**
      * Adds a visit to a prisoner
@@ -41,14 +40,14 @@ public class PrisonerManager extends BaseManager {
 
         return true;
     }
-    public boolean addVisit(Visit visit)
-    {
-        if(addVisit(visit.visitedPrisoner(),visit.name(),visit.date(),visit.reason()))
-        {
-            signalBuffer = new Signal( visit);
+
+    public boolean addVisit(Visit visit) {
+        if (addVisit(visit.visitedPrisoner(), visit.name(), visit.date(), visit.reason())) {
+            signalBuffer = new Signal(visit);
             return true;
         }
-        else return false;
+
+        return false;
     }
 
     /**
@@ -62,7 +61,6 @@ public class PrisonerManager extends BaseManager {
         String id = prisoner.getId();
 
         if (!prisoners.containsKey(id)) {
-
             return false;
         }
 
@@ -100,7 +98,7 @@ public class PrisonerManager extends BaseManager {
         }
 
         prisoners.put(id, new Prisoner(id, homeSection));
-        //todo add report to signal buffer
+        // TODO: Add report to signal buffer
         return true;
     }
 

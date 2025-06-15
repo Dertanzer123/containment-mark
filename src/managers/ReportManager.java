@@ -3,30 +3,24 @@ package managers;
 import core.SystemRoot;
 import types.Report;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ReportManager extends BaseManager {
-    ArrayList<Report> Reports = new ArrayList<>();//
+    HashMap<String, Report> reports = new HashMap<>();//
     // TODO: Add a database or file portal to store reports create a hashmap atleast
 
     public ReportManager(SystemRoot root) {
         super(root);
     }
 
-
-
     public void addReport(Report r) {
-        Reports.add(r);
+        reports.put(r.id(), r);
     }
 
     public Report getReport(String id) {
-        int index = Reports.indexOf(new Report(id,null,null,null,null));
-        if(index==-1)
-        {
+        if (!reports.containsKey(id)) {
             return null;
         }
-        return Reports.get(index);//todo change this with a hasmap get method
+        return reports.get(id);
     }
-
-
 }

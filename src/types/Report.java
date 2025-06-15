@@ -1,6 +1,7 @@
 package types;
 
-public class Report {
+public record Report(String id, types.Report.Origin reportOrigin, types.Report.ReportLevel alertLevel,
+                     String reportType, String reportContent) {
     public enum Origin {
         PRISONERM,
         STAFFM,
@@ -16,20 +17,6 @@ public class Report {
         LOW
     }
 
-    public final String id;
-    public final Origin reportOrigin;
-    public final ReportLevel alertLevel;
-    public final String reportType;
-    public final String reportContent;
-
-    public Report(String id, Origin reportOrigin, ReportLevel alertLevel, String reportType, String reportContent) {
-        this.id = id;
-        this.reportOrigin = reportOrigin;
-        this.alertLevel = alertLevel;
-        this.reportType = reportType;
-        this.reportContent = reportContent;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o instanceof Report r) {
@@ -37,6 +24,4 @@ public class Report {
         }
         return false;
     }
-
-
 }

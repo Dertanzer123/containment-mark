@@ -11,8 +11,6 @@ public abstract class BaseManager {
         this.root = root;
     }
 
-
-
     public Signal getSignalBuffer() {
         return signalBuffer;
     }

@@ -13,6 +13,7 @@ public class Staff {
     public Staff(String id) {
         this.id = id;
     }
+    
     @Override
     public boolean equals(Object o) {
         if (o instanceof Staff s) {
