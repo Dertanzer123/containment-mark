@@ -13,15 +13,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class UIManager extends BaseManager {
-
-
     public Date lastUpdateDate;
     private final BlockingQueue<UIInput> inputQueue = new LinkedBlockingQueue<>();
     private HttpServer server;
 
-
     public UIManager(SystemRoot root) throws IOException {
-
         super(root);
 
         WebServer.start(this);
@@ -35,9 +31,14 @@ public class UIManager extends BaseManager {
 
     public static void openHTML(String filepath) {
         try {
-            File htmlFile = new File(filepath); // path to your file
+            File htmlFile = new File(filepath);
             if (htmlFile.exists() && Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().browse(htmlFile.toURI());
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                    desktop.browse(htmlFile.toURI());
+                } else {
+                    System.err.println("BROWSE action not supported!");
+                }
             } else {
                 System.out.println("Cannot open browser.");
             }
@@ -45,7 +46,6 @@ public class UIManager extends BaseManager {
             e.printStackTrace();
         }
     }
-
 
     public void receiveInput(UIInput input) {
         inputQueue.offer(input);
