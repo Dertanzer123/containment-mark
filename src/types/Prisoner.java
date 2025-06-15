@@ -1,20 +1,23 @@
 package types;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Prisoner {
     private final String id;
-    private String name;
-    private boolean gender;
-    private Date birthDate;
+    private final String name;
+    private final String gender;
+    private final LocalDate birthDate;
     private Section homeSection;
     private final ArrayList<Visit> visits = new ArrayList<>();
 
-    public Prisoner(String id, Section homeSection) {
+    public Prisoner(String id, String name, String gender, LocalDate birthDate, Section homeSection) {
         this.id = id;
-
+        this.name = name;
+        this.gender = gender;
+        this.birthDate = birthDate;
         this.homeSection = homeSection;
+
         homeSection.addPrisoner(this);
     }
 
