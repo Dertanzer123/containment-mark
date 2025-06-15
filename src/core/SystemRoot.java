@@ -28,7 +28,7 @@ public class SystemRoot {
         int systemLoopWaitTime = 1000;
         Signal signal;
         ErrorCode ec = null;
-        FeedBackCodes sc = null;
+        FeedbackCodes sc = null;
 
         // TODO: : Add loading data from database/file to the prisoner,staff and section managers before system loop
 
@@ -46,7 +46,7 @@ public class SystemRoot {
                     case InputCode.UpdateDate: // TODO: : Implement the update date
                         signal = uiManager.getSignalBuffer(); //get the date from the uimanager (not user)
                         prisonerManager.updateVisits((Date) signal.signalData);
-                        sc = FeedBackCodes.UpdateDate;
+                        sc = FeedbackCodes.UpdateDate;
                         break;
                     case InputCode.Exit:
                         exit = true;
@@ -54,7 +54,7 @@ public class SystemRoot {
                     case InputCode.AddReport:
                         signal = uiManager.getSignalBuffer();//get the report from the uimanager (user)
                         reportManager.addReport((Report) signal.signalData);
-                        sc = FeedBackCodes.ReportAdded;
+                        sc = FeedbackCodes.ReportAdded;
                         break;
                     case InputCode.GetReport:
                         signal = uiManager.getSignalBuffer();//get the id from the uimanager (user)
@@ -64,7 +64,7 @@ public class SystemRoot {
                         } else {
                             // TODO: Get the report from the buffer when report returned
                             uiManager.writeSignalBuffer(new Signal(r));
-                            sc = FeedBackCodes.ReportReturn;
+                            sc = FeedbackCodes.ReportReturn;
                         }
                         break;
                     case InputCode.AddPrisoner:
@@ -73,7 +73,7 @@ public class SystemRoot {
                         if (prisonerManager.addPrisoner((String) signal.signalData, freeCell)) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
-                            sc = FeedBackCodes.PrisonerAdded;
+                            sc = FeedbackCodes.PrisonerAdded;
                         } else {
                             ec = ErrorCode.SameIdPrisoner;
                         }
@@ -84,7 +84,7 @@ public class SystemRoot {
                         if (prisonerManager.updatePrisonerData((String) signal.signalData, sectionManager.getfreeCellSection())) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
-                            sc = FeedBackCodes.PrisonerUpdated;
+                            sc = FeedbackCodes.PrisonerUpdated;
                         }
                         ec = ErrorCode.NoPrisonerFound;
                         break;
@@ -93,7 +93,7 @@ public class SystemRoot {
                         if (prisonerManager.deletePrisoner((String) signal.signalData)) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
-                            sc = FeedBackCodes.PrisonerDeleted;
+                            sc = FeedbackCodes.PrisonerDeleted;
                         }
                         ec = ErrorCode.NoPrisonerFound;
                         break;
@@ -102,7 +102,7 @@ public class SystemRoot {
                         if (prisonerManager.addVisit((Visit) signal.signalData)) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
-                            sc = FeedBackCodes.VisitAdded;
+                            sc = FeedbackCodes.VisitAdded;
                         } else {
                             ec = ErrorCode.NoPrisonerFound;
                         }
@@ -112,7 +112,7 @@ public class SystemRoot {
                         if (prisonerManager.deleteVisit((Visit) signal.signalData)) {
                             signal = prisonerManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
-                            sc = FeedBackCodes.VisitDeleted;
+                            sc = FeedbackCodes.VisitDeleted;
                         } else {
                             ec = ErrorCode.NoVisitFound;
                         }
@@ -123,7 +123,7 @@ public class SystemRoot {
                         if (staffManager.addStaff((Staff) signal.signalData)) {
                             signal = staffManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
-                            sc = FeedBackCodes.StaffAdded;
+                            sc = FeedbackCodes.StaffAdded;
                         } else {
                             ec = ErrorCode.SameIdStaff;
                         }
@@ -133,7 +133,7 @@ public class SystemRoot {
                         if (staffManager.updateStaffData((Staff) signal.signalData)) {
                             signal = staffManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
-                            sc = FeedBackCodes.StaffUpdated;
+                            sc = FeedbackCodes.StaffUpdated;
                         } else {
                             ec = ErrorCode.NoStaffFound;
                         }
@@ -143,7 +143,7 @@ public class SystemRoot {
                         if (staffManager.deleteStaff((Staff) signal.signalData)) {
                             signal = staffManager.getSignalBuffer();
                             reportManager.addReport((Report) signal.signalData);
-                            sc = FeedBackCodes.StaffDeleted;
+                            sc = FeedbackCodes.StaffDeleted;
                         } else {
                             ec = ErrorCode.NoStaffFound;
                         }

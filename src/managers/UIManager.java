@@ -60,7 +60,7 @@ public class UIManager extends BaseManager {
         }
     }
 
-    public InputCode getUserInput(FeedBackCodes feedbackCode, ErrorCode errorCode) {
+    public InputCode getUserInput(FeedbackCodes feedbackCode, ErrorCode errorCode) {
         // SignalCode might not be necessary depending on the next developments
         // TODO: Implement user interface and return user input to the system root
 

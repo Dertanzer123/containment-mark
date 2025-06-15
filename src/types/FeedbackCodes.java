@@ -1,6 +1,6 @@
 package types;
 
-public enum FeedBackCodes {
+public enum FeedbackCodes {
     // Report codes
     ReportAdded,
     ReportReturn,
