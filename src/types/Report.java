@@ -3,8 +3,8 @@ package types;
 public record Report(String id, types.Report.Origin reportOrigin, types.Report.ReportLevel alertLevel,
                      String reportType, String reportContent) {
     public enum Origin {
-        PRISONERM,
-        STAFFM,
+        PRISONER,
+        STAFF,
         USER
     }
 
