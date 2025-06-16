@@ -1,10 +1,7 @@
 package managers;
 
 import core.SystemRoot;
-import types.Prisoner;
-import types.Section;
-import types.Signal;
-import types.Visit;
+import types.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,6 +10,7 @@ import java.util.HashMap;
 public class PrisonerManager extends BaseManager {
     HashMap<String, Prisoner> prisoners = new HashMap<>();
     ArrayList<Visit> visits = new ArrayList<>();
+    int addedPrisoners = 0;
 
     public PrisonerManager(SystemRoot root) {
         super(root);
@@ -99,7 +97,12 @@ public class PrisonerManager extends BaseManager {
         prisoner.setHomeSection(freeCell);
 
         prisoners.put(id, prisoner);
-        // TODO: Add report to signal buffer
+        if(freeCell == null) {
+            System.err.println("No free cell");
+            return false;
+        }
+        signalBuffer = new Signal(new Report("Padd"+(addedPrisoners++), Report.Origin.PRISONER, Report.ReportLevel.LOW, "new prisoner added", "prisoner id:"+prisoner.getId()+"\nsection:"+freeCell.getId()));
+
         return true;
     }
 
@@ -118,6 +121,8 @@ public class PrisonerManager extends BaseManager {
         }
 
         prisoner.setHomeSection(homeSection);
+        signalBuffer = new Signal(new Report("Padd"+(addedPrisoners++), Report.Origin.PRISONER, Report.ReportLevel.LOW, "new prisoner added", "prisoner id:"+prisoner.getId()+"\nsection:"+homeSection.getId()));
+
         return true;
     }
 

@@ -343,10 +343,12 @@
 <!-- Exit Button -->
 <button class="exit-button" onclick="sendCommand('exit', {})">Exit System</button>
 
+<div id="message-container" style="margin: 10px; font-family: sans-serif;"></div>
+
 <script>
     let currentMainTab = 0;
     let currentSubTabs = [0, 0, 0, 0]; // Default sub-tab for each main tab
-
+    let lastMessage = "";
     function showTab(index) {
         document.querySelectorAll('.tab').forEach((el, i) =>
             el.classList.toggle('active', i === index)
@@ -373,7 +375,65 @@
         showSubTab(mainIndex, subIndex);
     }
 
+    function formatTime(date) {
+        return date.toLocaleTimeString(); // e.g., "14:35:02"
+    }
 
+    function addMessageToQueue(msg) {
+        const container = document.getElementById("message-container");
+
+        // Create message box
+        const box = document.createElement("div");
+        box.style.border = "1px solid #ccc";
+        box.style.borderRadius = "8px";
+        box.style.padding = "10px";
+        box.style.marginBottom = "10px";
+        box.style.backgroundColor = "#f9f9f9";
+        box.style.position = "relative";
+        box.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.1)";
+
+        // Time label (top right)
+        const timestamp = document.createElement("div");
+        timestamp.textContent = formatTime(new Date());
+        timestamp.style.position = "absolute";
+        timestamp.style.top = "8px";
+        timestamp.style.right = "12px";
+        timestamp.style.fontSize = "0.8em";
+        timestamp.style.color = "#888";
+        box.appendChild(timestamp);
+
+        // Parse message
+        const parts = msg.split(",");
+        const fbcode = parts[0] !== "n" ? parts[0] : "";
+        const ercode = parts[1] !== "n" ? parts[1] : "";
+        const params = parts.slice(2).join(",");
+
+        if (fbcode) {
+            const fb = document.createElement("div");
+            fb.innerHTML = `<strong>Feedback:</strong> ${fbcode}`;
+            box.appendChild(fb);
+        }
+
+        if (params && params !== "n") {
+            const pr = document.createElement("div");
+            pr.innerHTML = `<strong>Parameters:</strong> ${params}`;
+            box.appendChild(pr);
+        }
+
+        if (ercode) {
+            const err = document.createElement("div");
+            err.innerHTML = `<strong style="color: red;">Error:</strong> ${ercode}`;
+            box.appendChild(err);
+        }
+
+        // Add box to top
+        container.prepend(box);
+
+        // Optional: limit to last 8 messages
+        while (container.children.length > 8) {
+            container.removeChild(container.lastChild);
+        }
+    }
 
     function gatherAndSend(subtabId, inputCode) {
         const container = document.getElementById(subtabId);
@@ -398,7 +458,6 @@
     }
 
     function sendCommand(inputCode, params) {
-        // Pack the params object into the string format
         const paramString = Object.entries(params)
             .map(([key, value]) => `${key}:${value}`)
             .join(',');
@@ -410,25 +469,25 @@
             headers: { "Content-Type": "text/plain" },
             body: bodyString
         })
-            .then(res => res.text())
-            .then(text => {
-                alert("Response: " + text);
-            })
             .catch(err => {
                 alert("Failed to send command: " + err.message);
             });
     }
-    function sendExit() {
-        fetch("http://localhost:8080/submit", {
-            method: "POST",
-            headers: { "Content-Type": "text/plain" },
-            body: "exit"
-        }).then(res => res.text()).then(text => {
-            alert("System Exit: " + text);
-        }).catch(err => {
-            alert("Failed to exit: " + err.message);
-        });
+
+    function pollForMessages() {
+        fetch("http://localhost:8080/output")
+            .then(res => res.text())
+            .then(msg => {
+                if (msg && msg.trim() !== "") {
+                    lastMessage = msg;
+                    addMessageToQueue(msg);
+                }
+            })
+            .catch(err => console.error("Error polling for messages:", err));
     }
+
+    // Start polling every .5 seconds
+    setInterval(pollForMessages, 500);
 </script>
 
 </body>

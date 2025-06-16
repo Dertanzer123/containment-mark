@@ -25,7 +25,7 @@ public class SystemRoot {
     }
 
     private void systemLoop() {
-        int systemLoopWaitTime = 1000;
+        int systemLoopWaitTime = 0;
         Signal signal;
         ErrorCode ec = null;
         FeedbackCodes sc = null;

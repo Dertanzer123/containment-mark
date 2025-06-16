@@ -10,6 +10,7 @@ public class SectionManager extends BaseManager {
 
     public SectionManager(SystemRoot root) {
         super(root);
+        rootSection = new Section("root", null);
     }
 
     public Section getfreeCellSection() {

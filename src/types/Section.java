@@ -17,6 +17,10 @@ public class Section {
         this.parent = parent;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void addChild(Section child) {
         children.add(child);
         child.parent = this;
@@ -34,4 +38,5 @@ public class Section {
 
         return false;
     }
+
 }

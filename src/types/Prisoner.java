@@ -18,8 +18,9 @@ public class Prisoner {
         this.birthDate = birthDate;
         this.homeSection = homeSection;
 
+        if(homeSection != null) {
         homeSection.addPrisoner(this);
-    }
+    }}
 
     public String getId() {
         return id;
@@ -31,6 +32,9 @@ public class Prisoner {
 
     public void setHomeSection(Section homeSection) {
         this.homeSection = homeSection;
+        if(homeSection != null) {
+            homeSection.addPrisoner(this);
+        }
     }
 
     public void addVisit(Visit visit) {

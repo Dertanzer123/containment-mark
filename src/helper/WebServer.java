@@ -3,6 +3,7 @@ package helper;
 import com.sun.net.httpserver.HttpServer;
 import managers.UIManager;
 import types.UIInput;
+import types.UIOutput;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class WebServer {
     public static void start(UIManager uiManager) throws IOException {
@@ -34,19 +36,29 @@ public class WebServer {
                 // Send it to UI manager (send as necessary, e.g. raw string, or structured)
                 uiManager.receiveInput(parsedInput); // or pass parsedInput
 
-                // Respond
-                String response = "Input received";
-                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-                exchange.sendResponseHeaders(200, response.getBytes().length);
-                OutputStream os = exchange.getResponseBody();
-                os.write(response.getBytes());
-                os.close();
+
             } else if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
                 exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
                 exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "POST, OPTIONS");
                 exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
                 exchange.sendResponseHeaders(204, -1);
             }
+        });
+        server.createContext("/output", exchange -> {
+            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+
+            String response = "";
+
+            UIOutput output = uiManager.getNextMessage(); // This gets one queued output
+            if (output != null) {
+                response = enparseOutput(output);
+                System.out.println("Output polled by frontend: " + response);
+            }
+
+            exchange.sendResponseHeaders(200, response.getBytes().length);
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
         });
 
         server.setExecutor(null);
@@ -71,5 +83,26 @@ public class WebServer {
         }
 
         return new UIInput(inputCode, parameters);
+    }
+    private static String enparseOutput(UIOutput output) {
+        StringBuilder code = new StringBuilder();
+
+        // Feedback code
+        code.append(output.feedbackCode != null ? output.feedbackCode : "n").append(",");
+
+        // Error code
+        code.append(output.errorCode != null ? output.errorCode : "n").append(",");
+
+        // Parameters
+        if (output.parameters != null && !output.parameters.isEmpty()) {
+            String paramString = output.parameters.entrySet().stream()
+                    .map(entry -> entry.getKey() + ":" + entry.getValue())
+                    .collect(Collectors.joining(","));
+            code.append(paramString);
+        } else {
+            code.append("n");
+        }
+
+        return code.toString();
     }
 }
